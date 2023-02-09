@@ -5,15 +5,16 @@ import { useRouter } from "next/router"
 
 const ProductPage = () => {
   const {query: { id }} = useRouter()
-  const { data: product } = useProduct(id as string)
-
-  console.log(product)
+  const { data } = useProduct(id as string)
+  const product = data ? data.product : {};
 
   return (
     <Layout title="Product Detail">
       <KawaiiHeader />
 
-      <h2>{id}</h2>
+      <h2>
+        {product?.title}
+      </h2>
     </Layout>
   )
 }
