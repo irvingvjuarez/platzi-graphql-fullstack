@@ -1,3 +1,4 @@
+import axios from 'axios'
 import type { GetStaticProps, InferGetStaticPropsType } from 'next'
 import Layout from '@components/Layout/Layout'
 import KawaiiHeader from '@components/KawaiiHeader/KawaiiHeader'
@@ -6,61 +7,37 @@ import client from '@service/client'
 import { GetAllAvocadosDocument } from '@service/graphql'
 import type { AvocadoFragment } from '@service/graphql'
 import { useEffect } from 'react'
+import { useQuery } from "react-query"
 
-// export const getStaticProps: GetStaticProps<{ products: AvocadoFragment[] }> =
-//   async () => {
-//     try {
-//       const response = await client.query({
-//         query: GetAllAvocadosDocument,
-//         // Ignore cache para refrescar por completo nuestro contenido
-//         // al fin y al cabo con `revalidate` controlamos la frecuencia
-//         fetchPolicy: 'network-only',
-//       })
+const requester = axios.create({
+  baseURL: "https://api.escuelajs.co",
+  headers: {
+    "Content-Type": "application/json"
+  }
+})
 
-//       if (response.data.avos == null) {
-//         throw new Error(`There was an error fetching the items`)
-//       }
+const useProducts = () => {
+  return useQuery("products", async () => {
+    const res = await requester.post<Product[]>("/graphql", {
+      query: `
+        query {
+          products {
+            id
+            title
+            price
+          }
+        }
+      `
+    })
 
-//       const products = response.data.avos as AvocadoFragment[]
-//       return {
-//         props: { products },
-//         // Next.js intentará re generar la página cuando:
-//         // - Se visite este página
-//         // - Pasen al menos 5 minutos.
-//         revalidate: 5 * 60,
-//       }
-//     } catch (e) {
-//       console.log(e)
-//       return {
-//         notFound: true,
-//       }
-//     }
-//   }
+    return res.data
+  })
+}
 
 const HomePage = () => {
-  useEffect(() => {
-    fetch("https://api.escuelajs.co/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        query: `
-          query {
-            products {
-              id
-              title
-              price
-            }
-          }
-        `
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
-      console.log({ data })
-    })
-  }, [])
+  const {status, data} = useProducts()
+
+  console.log(data)
 
   return (
     <Layout title="Home">
