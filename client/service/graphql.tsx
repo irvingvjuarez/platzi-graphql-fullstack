@@ -1,9 +1,11 @@
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-export type InputMaybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -11,118 +13,272 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Represents a date time object */
   DateTime: any;
 };
 
-export type Attributes = {
-  __typename?: 'Attributes';
-  description: Maybe<Scalars['String']>;
-  hardiness: Maybe<Scalars['String']>;
-  shape: Maybe<Scalars['String']>;
-  taste: Maybe<Scalars['String']>;
-};
-
-export type AvoCreateInput = {
-  description: InputMaybe<Scalars['String']>;
-  hardiness: InputMaybe<Scalars['String']>;
-  image: Scalars['String'];
-  name: Scalars['String'];
-  price: Scalars['Float'];
-  shape: InputMaybe<Scalars['String']>;
-  sku: Scalars['String'];
-  taste: InputMaybe<Scalars['String']>;
-};
-
-export type AvoWhereInput = {
-  name: InputMaybe<StringFilterInput>;
-  price: InputMaybe<Scalars['Float']>;
-};
-
-export type Avocado = BaseModel & {
-  __typename?: 'Avocado';
-  attributes: Attributes;
-  createdAt: Scalars['DateTime'];
-  deletedAt: Maybe<Scalars['DateTime']>;
+/** category  */
+export type Category = {
+  __typename?: 'Category';
+  creationAt: Scalars['DateTime'];
   id: Scalars['ID'];
   image: Scalars['String'];
   name: Scalars['String'];
-  price: Scalars['Float'];
-  sku: Scalars['String'];
-  updatedAt: Maybe<Scalars['DateTime']>;
+  products: Array<Product>;
+  updatedAt: Scalars['DateTime'];
 };
 
-export type BaseModel = {
-  createdAt: Scalars['DateTime'];
-  deletedAt: Maybe<Scalars['DateTime']>;
-  id: Scalars['ID'];
-  updatedAt: Maybe<Scalars['DateTime']>;
+export type CreateCategoryDto = {
+  image: Scalars['String'];
+  name: Scalars['String'];
+};
+
+export type CreateProductDto = {
+  categoryId: Scalars['Float'];
+  description: Scalars['String'];
+  images: Array<Scalars['String']>;
+  price: Scalars['Float'];
+  title: Scalars['String'];
+};
+
+export type CreateUserDto = {
+  avatar: Scalars['String'];
+  email: Scalars['String'];
+  name: Scalars['String'];
+  password: Scalars['String'];
+  role?: InputMaybe<Role>;
+};
+
+/** Login  */
+export type Login = {
+  __typename?: 'Login';
+  access_token: Scalars['String'];
+  refresh_token: Scalars['String'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createAvo: Avocado;
+  addCategory: Category;
+  addProduct: Product;
+  addUser: User;
+  deleteCategory: Scalars['Boolean'];
+  deleteProduct: Scalars['Boolean'];
+  deleteUser: Scalars['Boolean'];
+  login: Login;
+  refreshToken: Login;
+  updateCategory: Category;
+  updateProduct: Product;
+  updateUser: User;
 };
 
 
-export type MutationCreateAvoArgs = {
-  data: AvoCreateInput;
-};
-
-export type Query = {
-  __typename?: 'Query';
-  avo: Maybe<Avocado>;
-  avos: Array<Maybe<Avocado>>;
+export type MutationAddCategoryArgs = {
+  data: CreateCategoryDto;
 };
 
 
-export type QueryAvoArgs = {
+export type MutationAddProductArgs = {
+  data: CreateProductDto;
+};
+
+
+export type MutationAddUserArgs = {
+  data: CreateUserDto;
+};
+
+
+export type MutationDeleteCategoryArgs = {
   id: Scalars['ID'];
 };
 
 
-export type QueryAvosArgs = {
-  skip: InputMaybe<Scalars['Int']>;
-  take: InputMaybe<Scalars['Int']>;
-  where: InputMaybe<AvoWhereInput>;
+export type MutationDeleteProductArgs = {
+  id: Scalars['ID'];
 };
 
-export type StringFilterInput = {
-  contains: InputMaybe<Scalars['String']>;
-  endsWith: InputMaybe<Scalars['String']>;
-  equals: InputMaybe<Scalars['String']>;
-  gt: InputMaybe<Scalars['String']>;
-  gte: InputMaybe<Scalars['String']>;
-  in: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  lt: InputMaybe<Scalars['String']>;
-  lte: InputMaybe<Scalars['String']>;
-  not: InputMaybe<Scalars['String']>;
-  notIn: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-  startsWith: InputMaybe<Scalars['String']>;
+
+export type MutationDeleteUserArgs = {
+  id: Scalars['ID'];
 };
 
-export type AvocadoFragment = { __typename?: 'Avocado', id: string, image: string, name: string, createdAt: any, sku: string, price: number, attributes: { __typename?: 'Attributes', description: string | null, taste: string | null, shape: string | null, hardiness: string | null } };
 
-export type GetAllAvocadosQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetAllAvocadosQuery = { __typename?: 'Query', avos: Array<{ __typename?: 'Avocado', id: string, image: string, name: string, createdAt: any, sku: string, price: number, attributes: { __typename?: 'Attributes', description: string | null, taste: string | null, shape: string | null, hardiness: string | null } } | null> };
-
-export type GetAvocadoQueryVariables = Exact<{
-  avoId: Scalars['ID'];
-}>;
+export type MutationLoginArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
 
 
-export type GetAvocadoQuery = { __typename?: 'Query', avo: { __typename?: 'Avocado', id: string, image: string, name: string, createdAt: any, sku: string, price: number, attributes: { __typename?: 'Attributes', description: string | null, taste: string | null, shape: string | null, hardiness: string | null } } | null };
-
-export type AddAvocadoMutationVariables = Exact<{
-  data: AvoCreateInput;
-}>;
+export type MutationRefreshTokenArgs = {
+  refreshToken: Scalars['String'];
+};
 
 
-export type AddAvocadoMutation = { __typename?: 'Mutation', createAvo: { __typename?: 'Avocado', id: string, image: string, name: string, createdAt: any, sku: string, price: number, attributes: { __typename?: 'Attributes', description: string | null, taste: string | null, shape: string | null, hardiness: string | null } } };
+export type MutationUpdateCategoryArgs = {
+  changes: UpdateCategoryDto;
+  id: Scalars['ID'];
+};
 
-export const AvocadoFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Avocado"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Avocado"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"image"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"sku"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"attributes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"taste"}},{"kind":"Field","name":{"kind":"Name","value":"shape"}},{"kind":"Field","name":{"kind":"Name","value":"hardiness"}}]}}]}}]} as unknown as DocumentNode<AvocadoFragment, unknown>;
-export const GetAllAvocadosDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAllAvocados"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avos"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Avocado"}}]}}]}},...AvocadoFragmentDoc.definitions]} as unknown as DocumentNode<GetAllAvocadosQuery, GetAllAvocadosQueryVariables>;
-export const GetAvocadoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAvocado"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"avoId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avo"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"avoId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Avocado"}}]}}]}},...AvocadoFragmentDoc.definitions]} as unknown as DocumentNode<GetAvocadoQuery, GetAvocadoQueryVariables>;
-export const AddAvocadoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AddAvocado"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"AvoCreateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createAvo"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Avocado"}}]}}]}},...AvocadoFragmentDoc.definitions]} as unknown as DocumentNode<AddAvocadoMutation, AddAvocadoMutationVariables>;
+
+export type MutationUpdateProductArgs = {
+  changes: UpdateProductDto;
+  id: Scalars['ID'];
+};
+
+
+export type MutationUpdateUserArgs = {
+  changes: UpdateUserDto;
+  id: Scalars['ID'];
+};
+
+/** product  */
+export type Product = {
+  __typename?: 'Product';
+  category: Category;
+  creationAt: Scalars['DateTime'];
+  description: Scalars['String'];
+  id: Scalars['ID'];
+  images: Array<Scalars['String']>;
+  price: Scalars['Float'];
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  categories: Array<Category>;
+  category: Category;
+  isAvailable: Scalars['Boolean'];
+  myProfile: User;
+  product: Product;
+  products: Array<Product>;
+  user: User;
+  users: Array<User>;
+};
+
+
+export type QueryCategoryArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryIsAvailableArgs = {
+  email: Scalars['String'];
+};
+
+
+export type QueryProductArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryProductsArgs = {
+  categoryId?: InputMaybe<Scalars['Float']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  price?: InputMaybe<Scalars['Int']>;
+  price_max?: InputMaybe<Scalars['Int']>;
+  price_min?: InputMaybe<Scalars['Int']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryUsersArgs = {
+  limit?: InputMaybe<Scalars['Float']>;
+};
+
+export enum Role {
+  Admin = 'admin',
+  Customer = 'customer'
+}
+
+export type UpdateCategoryDto = {
+  image?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateProductDto = {
+  categoryId?: InputMaybe<Scalars['Float']>;
+  description?: InputMaybe<Scalars['String']>;
+  images?: InputMaybe<Array<Scalars['String']>>;
+  price?: InputMaybe<Scalars['Float']>;
+  title?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateUserDto = {
+  avatar?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  password?: InputMaybe<Scalars['String']>;
+  role?: InputMaybe<Role>;
+};
+
+/** product  */
+export type User = {
+  __typename?: 'User';
+  avatar: Scalars['String'];
+  creationAt: Scalars['DateTime'];
+  email: Scalars['String'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  password: Scalars['String'];
+  role: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
+export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'Product', id: string, title: string, price: number, description: string, images: Array<string>, creationAt: any, updatedAt: any, category: { __typename?: 'Category', id: string, name: string, image: string, creationAt: any, updatedAt: any } }> };
+
+
+export const GetProductsDocument = gql`
+    query GetProducts {
+  products {
+    id
+    title
+    price
+    description
+    images
+    creationAt
+    updatedAt
+    category {
+      id
+      name
+      image
+      creationAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetProductsQuery__
+ *
+ * To run a query within a React component, call `useGetProductsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProductsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetProductsQuery(baseOptions?: Apollo.QueryHookOptions<GetProductsQuery, GetProductsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProductsQuery, GetProductsQueryVariables>(GetProductsDocument, options);
+      }
+export function useGetProductsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProductsQuery, GetProductsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProductsQuery, GetProductsQueryVariables>(GetProductsDocument, options);
+        }
+export type GetProductsQueryHookResult = ReturnType<typeof useGetProductsQuery>;
+export type GetProductsLazyQueryHookResult = ReturnType<typeof useGetProductsLazyQuery>;
+export type GetProductsQueryResult = Apollo.QueryResult<GetProductsQuery, GetProductsQueryVariables>;
