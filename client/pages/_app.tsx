@@ -3,18 +3,21 @@ import CartProvider from '@store/Cart'
 
 import 'semantic-ui-css/semantic.min.css'
 import '../globals.css'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { ApolloProvider, ApolloClient, gql, InMemoryCache } from '@apollo/client'
 
 
-const client = new QueryClient()
+const client = new ApolloClient({
+  uri: "https://api.escuelajs.co/graphql",
+  cache: new InMemoryCache()
+})
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <QueryClientProvider client={client}>
+    <ApolloProvider client={client}>
       <CartProvider>
         <Component {...pageProps} />
       </CartProvider>
-    </QueryClientProvider>
+    </ApolloProvider>
   )
 }
 
