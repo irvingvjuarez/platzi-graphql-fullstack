@@ -1,8 +1,9 @@
 import { useQuery } from "@apollo/client"
 import { GET_PRODUCT } from "@service/gql.queries"
+import { useProductQuery } from "@service/graphql"
 
 export const useProduct = (id: string) => {
-  return useQuery(GET_PRODUCT,{
-    variables: { id }
+  return useProductQuery({
+    variables: {id}
   })
 }

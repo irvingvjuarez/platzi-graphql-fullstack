@@ -2,6 +2,7 @@ import Layout from '@components/Layout/Layout'
 import KawaiiHeader from '@components/KawaiiHeader/KawaiiHeader'
 import { useProducts } from 'hooks/useProducts'
 import Link from "next/link"
+import { Product } from '@service/graphql'
 
 const HomePage = () => {
   const { loading, error, data } = useProducts()

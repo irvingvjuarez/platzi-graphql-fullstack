@@ -16,3 +16,22 @@ query GetProducts {
     }
   }
 }
+
+query Product($id: ID!) {
+  product(id: $id) {
+    id
+    title
+    price
+    description
+    images
+    creationAt
+    updatedAt
+    category {
+      id
+      name
+      image
+      creationAt
+      updatedAt
+    }
+  }
+}
