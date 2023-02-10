@@ -1,11 +1,13 @@
 import Layout from '@components/Layout/Layout'
 import KawaiiHeader from '@components/KawaiiHeader/KawaiiHeader'
-import { useProducts } from 'hooks/useProducts'
 import Link from "next/link"
-import { Product } from '@service/graphql'
+import { GetProductsDocument, Product } from '@service/graphql'
+import { useQuery } from '@apollo/client'
 
 const HomePage = () => {
-  const { loading, error, data } = useProducts()
+  const { loading, error, data } = useQuery(GetProductsDocument)
+
+  console.log({ data })
 
   return (
     <Layout title="Home">
