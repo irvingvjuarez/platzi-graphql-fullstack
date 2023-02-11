@@ -3,27 +3,8 @@ import CartProvider from '@store/Cart'
 
 import 'semantic-ui-css/semantic.min.css'
 import '../globals.css'
-import { ApolloProvider, ApolloClient, gql, InMemoryCache } from '@apollo/client'
-
-const client = new ApolloClient({
-  uri: "https://api.escuelajs.co/graphql",
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          product: {
-            read(_, {args, toReference}) {
-              return toReference({
-                __typename: "Product",
-                id: args?.id
-              })
-            }
-          }
-        }
-      }
-    }
-  })
-})
+import { ApolloProvider } from '@apollo/client'
+import { client } from '@service/client.apollo'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
